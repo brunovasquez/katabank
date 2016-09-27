@@ -22,6 +22,7 @@ public class AccountNumber {
     private static final int DIGIT_WIDTH = 3;
     private static final int ACCOUNT_WIDTH = 9;
     private List<DigitRepresentation> digits;
+    private CheckSumValidator validator;
 
     /**
      * It is the constructor that will get and will validate a account number .
@@ -35,6 +36,7 @@ public class AccountNumber {
         this.line1 = line1;
         this.line2 = line2;
         digits = new ArrayList<>();
+        validator = new CheckSumValidator();
         parse();
         validate();
     }
@@ -61,14 +63,14 @@ public class AccountNumber {
      * This method will append ILL if any digit is illegible
      */
     private void validateLegibility() {
-        digits.forEach((DigitRepresentation digitChar) -> illegible = !digitChar.isValid() && !illegible ? true : false);
+        digits.forEach((DigitRepresentation digitChar) -> illegible = !digitChar.isValid() && !illegible);
     }
 
     /**
      * This method performs the CheckSumValidator on the account number.
      */
     private void performCheckSum() {
-        failedCheckSum = !CheckSumValidator.isValid(toDigitString());
+        failedCheckSum = !validator.isValid(toDigitString());
     }
 
     /**
