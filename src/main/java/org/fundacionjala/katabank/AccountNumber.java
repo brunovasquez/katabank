@@ -27,9 +27,9 @@ public class AccountNumber {
     /**
      * It is the constructor that will get and will validate a account number .
      *
-     * @param line0 The top line of the account number
-     * @param line1 The middle line of the account number
-     * @param line2 The bottom line of the account number
+     * @param line0 The top line of the account number.
+     * @param line1 The middle line of the account number.
+     * @param line2 The bottom line of the account number.
      */
     public AccountNumber(String line0, String line1, String line2) {
         this.line0 = line0;
@@ -42,15 +42,15 @@ public class AccountNumber {
     }
 
     /**
-     * This method will fill digits with the DigitRepresentation found in the account number
+     * This method will fill digits with the DigitRepresentation found in the account number.
      */
     private void parse() {
         IntStream.range(0, ACCOUNT_WIDTH).forEach(index -> digits.add(getDigitAtIndex(index)));
     }
 
     /**
-     * This method checks each digit in the Account Number is a valid digit
-     * and checks the full Account Number against the CheckSumValidator
+     * This method checks each digit in the Account Number is a valid digit.
+     * and checks the full Account Number against the CheckSumValidator.
      */
     private void validate() {
         validateLegibility();
@@ -60,7 +60,7 @@ public class AccountNumber {
     }
 
     /**
-     * This method will append ILL if any digit is illegible
+     * This method will append ILL if any digit is illegible.
      */
     private void validateLegibility() {
         digits.forEach((DigitRepresentation digitChar) -> illegible = !digitChar.isValid() && !illegible);
@@ -76,7 +76,7 @@ public class AccountNumber {
     /**
      * It is the method will get the digit string according the lines.
      *
-     * @param index a integer with the position of the digit in the account
+     * @param index a integer with the position of the digit in the account.
      * @return a object that contain the account number as a String.
      */
     public DigitRepresentation getDigitAtIndex(int index) {
