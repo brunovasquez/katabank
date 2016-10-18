@@ -42,16 +42,13 @@ public class DigitRepresentation {
     private static final char ILLEGIBLE = '?';
 
 
-    private String graph;
     private Map<String, Character> digitHash = new HashMap<>();
 
     /**
      * It is the constructor of digit representation.
-     *
-     * @param graph an String to represent a digit.
      */
-    public DigitRepresentation(String graph) {
-        this.graph = graph;
+    public DigitRepresentation() {
+
         digitHash.put(ZERO, '0');
         digitHash.put(ONE, '1');
         digitHash.put(TWO, '2');
@@ -69,26 +66,27 @@ public class DigitRepresentation {
      *
      * @return a char that represent a digit.
      */
-    public char toChar() {
-        return isValid() ? digitHash.get(graph) : ILLEGIBLE;
+    public char toChar(String graph) {
+        return isValid(graph) ? digitHash.get(graph) : ILLEGIBLE;
     }
+
 
     /**
      * It is the method bring back a boolean according the graph.
      *
      * @return a boolean that if the graph is in the hash.
      */
-    public boolean isValid() {
+    public boolean isValid(String graph) {
         return digitHash.containsKey(graph);
     }
 
+
     /**
-     * It is the method bring back a boolean according the graph.
+     * It is the method that gets a map with digit representation.
      *
-     * @return a string that contain the graph.
+     * @return a map.
      */
-    @Override
-    public String toString() {
-        return graph;
+    public Map<String, Character> getDigitHash() {
+        return digitHash;
     }
 }

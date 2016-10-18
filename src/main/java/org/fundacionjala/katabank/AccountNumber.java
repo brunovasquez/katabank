@@ -2,7 +2,10 @@ package org.fundacionjala.katabank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
+
+import static org.fundacionjala.katabank.DigitRepresentation.ILLEGIBLE;
 
 /**
  * Representation of a account number of digits.
@@ -21,8 +24,9 @@ public class AccountNumber {
     private boolean failedCheckSum;
     private static final int DIGIT_WIDTH = 3;
     private static final int ACCOUNT_WIDTH = 9;
-    private List<DigitRepresentation> digits;
-    private CheckSumValidator validator;
+    private DigitRepresentation digitRepresentation;
+
+    private final String ILLEGIBLE = "?";
 
     /**
      * It is the constructor that will get and will validate a account number .
@@ -35,17 +39,8 @@ public class AccountNumber {
         this.line0 = line0;
         this.line1 = line1;
         this.line2 = line2;
-        digits = new ArrayList<>();
-        validator = new CheckSumValidator();
-        parse();
+        digitRepresentation = new DigitRepresentation();
         validate();
-    }
-
-    /**
-     * This method will fill digits with the DigitRepresentation found in the account number.
-     */
-    private void parse() {
-        IntStream.range(0, ACCOUNT_WIDTH).forEach(index -> digits.add(getDigitAtIndex(index)));
     }
 
     /**
@@ -63,14 +58,17 @@ public class AccountNumber {
      * This method will append ILL if any digit is illegible.
      */
     private void validateLegibility() {
-        digits.forEach((DigitRepresentation digitChar) -> illegible = !digitChar.isValid() && !illegible);
+        Map<String, Character> mapDigit = digitRepresentation.getDigitHash();
+
+        IntStream.range(0, ACCOUNT_WIDTH)
+                .forEach(index -> illegible = !mapDigit.containsKey(getDigitAtIndex(index)) && !illegible);
     }
 
     /**
      * This method performs the CheckSumValidator on the account number.
      */
     private void performCheckSum() {
-        failedCheckSum = !validator.isValid(toDigitString());
+        failedCheckSum = !new CheckSumValidator().isValid(toDigitString());
     }
 
     /**
@@ -79,11 +77,11 @@ public class AccountNumber {
      * @param index a integer with the position of the digit in the account.
      * @return a object that contain the account number as a String.
      */
-    public DigitRepresentation getDigitAtIndex(int index) {
+    public String getDigitAtIndex(int index) {
         String line00 = this.line0.substring(index * DIGIT_WIDTH, index * DIGIT_WIDTH + DIGIT_WIDTH);
         String line01 = this.line1.substring(index * DIGIT_WIDTH, index * DIGIT_WIDTH + DIGIT_WIDTH);
         String line02 = this.line2.substring(index * DIGIT_WIDTH, index * DIGIT_WIDTH + DIGIT_WIDTH);
-        return new DigitRepresentation(line00.concat(line01).concat(line02));
+        return line00.concat(line01).concat(line02);
     }
 
     /**
@@ -92,8 +90,13 @@ public class AccountNumber {
      * @return a string that contain the account number as a String.
      */
     public String toDigitString() {
+        Map<String, Character> mapDigit = digitRepresentation.getDigitHash();
         final StringBuilder builder = new StringBuilder();
-        digits.forEach((DigitRepresentation digitChar) -> builder.append(digitChar.toChar()));
+
+        IntStream.range(0, ACCOUNT_WIDTH)
+                .forEach(index -> builder.append(mapDigit.containsKey(getDigitAtIndex(index)) ?
+                        mapDigit.get(getDigitAtIndex(index)) : ILLEGIBLE));
+
         return builder.toString();
     }
 
